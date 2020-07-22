@@ -43,6 +43,8 @@ def sort():
                 pdb.gimp_image_lower_item(image, a)
                 more = True
                 break
+    for layer in image.layers:
+        pdb.gimp_layer_resize_to_image_size(layer)
 
 
 def frame(name=None):

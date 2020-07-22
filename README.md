@@ -56,7 +56,7 @@ If you have multiple frames drawn on each sheet of paper, it's now time to split
 
 1. Right-click on each layer in the Layers dialog and select "Duplicate Layer" until you have as many copies of the layer as there are frames in the layer.
 2. Rename each layer with the frame number that the layer will represent.  E.g. if you have three copies of a layer that contains frames 1, 2 and 3, then you will end up with three copies of that layer called "1", "2" and "3".  To rename a layer, click it in the Layer dialog and press F2.
-3. Create guide lines (by dragging down and across from the ruler) that you can use to align your frames.
+3. Create guide lines (by dragging down and across from the ruler) that you can use to align your frames.  Turn off "Snap to Guides" from the View menu.
 4. Go through each layer and use the Move tool to shift the whole layer to line up the frames.  To select a single layer, run the Python function `frame(1)` to activate layer 1, `frame(2)` to activate layer 2, etc. - this also hides all the other layers, to avoid confusion.
 5. Select a rectangle that contains all frame contents, and the Image > Crop to Selection.
 6. Go through each layer (using the `frame` function) and delete any mess around the edges, e.g. parts of other frames, using the usual GIMP drawing / selection tools.
@@ -64,14 +64,14 @@ If you have multiple frames drawn on each sheet of paper, it's now time to split
 ### Sort frames
 
 1. If you haven't already numbered the layers, rename each layer to have the frame number "1", "2" etc.  To rename a layer, click it in the Layer dialog (Windows > Dockable Dialogs > Layers) and press F2.
-2. In the Python-fu console, run `sort()` to sort the frames from bottom to top.
+2. In the Python-fu console, run `sort()` to sort the frames from bottom to top.  Note: this also sets the layer size to the image size for each layer.
 
 ### Preview animation
 
 1. Click "Filters > Animation > Playback...".  The Playback dialog opens.
 2. If your images are transparent, change "Cumulative layers (combine)" to "One frame per layer (replace)".  If your images have no transparency, the options are equivalent.
 3. Press the play icon to see your animation.
-4. Change the "1x" option to see your animation at a different playback rate.  (The "fps" option doesn't seem to have any effect for me).
+4. Change the "1x" option to see your animation at a different playback rate.  (You can change the "fps" option as well, but you need to close and re-open the dialog box for it to take effect).
 5. Close the dialog when done.
 
 ### Save animation as animated GIF
@@ -79,7 +79,7 @@ If you have multiple frames drawn on each sheet of paper, it's now time to split
 1. Click File > Export As...
 2. Enter a filename ending in `.gif` and click Export.
 3. Tick "As Animation".  You probably want "Loop forever" to stay ticked.
-4. Enter the Delay: 10 fps = 100 ms, 12.5 fps = 80 ms, 25 fps = 40 ms.
+4. Enter the Delay: 10 fps = 100 ms, 12.5 fps = 80 ms, 15 fps = 67 ms, 20 fps = 50 ms, 25 fps = 40 ms.
 5. Select Frame Disposal "One frame per layer (replace)".
 6. Tick the two boxes at the bottom to apply the same Delay and Disposal to all frames.
 7. Click Export, and wait.
