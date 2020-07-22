@@ -82,6 +82,8 @@ You can run the function `gif(ms)` to save the animation as an animated GIF file
 
 To convert frames per second to milliseconds delay, divide 1000 by the quantity, or use this quick guide: 10 fps = 100 ms, 12.5 fps = 80 ms, 15 fps = 67 ms, 20 fps = 50 ms, 25 fps = 40 ms.
 
+If you prefer more control or the Python script doesn't work, you can convert to a GIF manually as follows.
+
 1. Click File > Export As...
 2. Enter a filename ending in `.gif` and click Export.
 3. Tick "As Animation".  You probably want "Loop forever" to stay ticked.
