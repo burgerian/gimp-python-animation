@@ -1,5 +1,7 @@
 # Gimp-Python scripts for animation
 
+![Animated gif of harshmallow](harshmallow.gif)
+
 ## Introduction
 
 GIMP is a good tool for animation, but it can be quite laborious to use it, involving a lot of repetitive clicks.  This project contains code written for GIMP's python-fu feature that helps to speed up various animation tasks.
@@ -76,10 +78,14 @@ If you have multiple frames drawn on each sheet of paper, it's now time to split
 
 ### Save animation as animated GIF
 
+You can run the function `gif(ms)` to save the animation as an animated GIF file.  Replace `ms` with the number of milliseconds to show each frame.
+
+To convert frames per second to milliseconds delay, divide 1000 by the quantity, or use this quick guide: 10 fps = 100 ms, 12.5 fps = 80 ms, 15 fps = 67 ms, 20 fps = 50 ms, 25 fps = 40 ms.
+
 1. Click File > Export As...
 2. Enter a filename ending in `.gif` and click Export.
 3. Tick "As Animation".  You probably want "Loop forever" to stay ticked.
-4. Enter the Delay: 10 fps = 100 ms, 12.5 fps = 80 ms, 15 fps = 67 ms, 20 fps = 50 ms, 25 fps = 40 ms.
+4. Enter the Delay in milliseconds.
 5. Select Frame Disposal "One frame per layer (replace)".
 6. Tick the two boxes at the bottom to apply the same Delay and Disposal to all frames.
 7. Click Export, and wait.

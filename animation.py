@@ -118,3 +118,36 @@ def png(prefix=None):
         )
 
 
+def gif(ms=40, prefix=None):
+    image = gimp.image_list()[0]
+    if not prefix:
+        filename = pdb.gimp_image_get_filename(image)
+        prefix = filename[:-4]
+    print("Preparing temporary image")
+    image = pdb.gimp_image_duplicate(image)
+    try:
+        if pdb.gimp_image_base_type(image) != 2:
+            print("Converting temporary image to indexed colour mode")
+            pdb.gimp_image_convert_indexed(
+                image,
+                0, # dither-type=CONVERT-DITHER-NONE
+                0, # palette-type=CONVERT-PALETTE-GENERATE
+                255, # num-cols
+                False, # alpha-dither
+                False, # remove-unused
+                "" # palette
+            )
+        filename = prefix + ".gif"
+        print("Saving animated GIF as {}".format(filename))
+        pdb.file_gif_save(
+            image, image.layers[0],
+            filename, filename,
+            True, # interlace
+            True, # loop
+            ms, # default-delay
+            2 # default-dispose
+        )
+    finally:
+        pdb.gimp_image_delete(image)
+
+
