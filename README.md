@@ -20,7 +20,7 @@ You will need the following GIMP dialogs open all the time:
 - Windows > Dockable Dialogs > Undo History (a dialog shown within the main GIMP window)
 - Windows > Dockable Dialogs > Layers (a dialog shown within the main GIMP window)
 
-Copy/paste the code from [animation.py] into the Python-fu console.  This will define functions, but not run them, so it won't make any changes to your images yet.  Keep the Python-fu console open throughout the whole process - you can switch between the console and the main GIMP window as required.  If you close it by mistake, just open it again and copy/paste [animation.py] again.
+Copy/paste the code from [animation.py](animation.py) into the Python-fu console.  This will define functions, but not run them, so it won't make any changes to your images yet.  Keep the Python-fu console open throughout the whole process - you can switch between the console and the main GIMP window as required.  If you close it by mistake, just open it again and copy/paste [animation.py](animation.py) again.
 
 If you don't like the result of any script operation, use GIMP's Undo History and click above the list of changes made by the script to reverse its effect.
 
