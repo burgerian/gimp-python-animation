@@ -37,7 +37,7 @@ Of course, you can adapt this process and modify your copy of the Python code to
 3. Open the python-fu console "Filters > Python-fu > Console".
 4. Run `stack()` in the Python-fu console.  All the images get combined into one image as layers.
 5. Use "Image > Transform" to rotate the image to the correct orientation.
-6. Use "Image > Scale" to scale the image to the pixel dimensions you want.  It's best if the image fits on your screen.
+6. Use "Image > Scale" to scale the image to the pixel dimensions you want.  It's best if the image fits on your screen at 100% zoom.
 7. Save the image (in GIMP's `.xcf` format).
 8. File > Close All and discard changes.  This is necessary because the Python-fu can't close your other now-empty images for you.
 9. Reopen the GIMP file you saved.
@@ -89,7 +89,9 @@ GIMP can't save movie files, so you'll need other software if you want your anim
 
 ### Save animation as separate frames
 
-TODO
+Run `png()` function.
+
+You can also specify a path and filename root e.g. `png(r"C:\Users\me\Pictures\my_anim")` will save the layers as `my_anim_01.png`, `my_anim_02.png`, `my_anim_03.png` etc.
 
 ### Save animation as sprite map
 
@@ -98,6 +100,9 @@ TODO
 ### Remove box around frame (transparent edge)
 
 Your scans will be full white rectangles with no transparency.  To add an Alpha Channel to your frames and delete the white edge around the outside, run Python function `nobox()`.
+
+After removing the frame, run the Python function `showall()` to see all the frames overlaid on each other, then you can easily crop the image to a box that includes all the content in all the frames.
+
 
 ### Mirror the frames (reverse loop playback)
 
