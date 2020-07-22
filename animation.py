@@ -1,10 +1,10 @@
 def stack():
     target = None
-    for i in gimp.image_list():
+    for image in gimp.image_list():
         pdb.gimp_selection_none(image)
         if image.layers:
             if not target:
-                target = i
+                target = image
             else:
                 for layer in image.layers:
                     pdb.gimp_edit_cut(layer)
@@ -114,3 +114,5 @@ def png(prefix=None):
             True, # phys
             True, # time
         )
+
+
