@@ -1,3 +1,5 @@
+# https://github.com/burgerian/gimp-python-animation
+
 def stack():
     target = None
     for image in gimp.image_list():
@@ -24,7 +26,9 @@ def nobox():
     image = gimp.image_list()[0]
     for layer in image.layers:
         layer.add_alpha()
-        pdb.gimp_image_select_contiguous_color(image, 2, layer, 0, 0)
+        (w, h) = (image.width - 1, image.height - 1)
+        for (x, y) in [(0, 0), (w, 0), (0, h), (w, h)]:
+            pdb.gimp_image_select_contiguous_color(image, 2, layer, x, y)
         pdb.gimp_edit_clear(layer)
 
 
@@ -47,6 +51,32 @@ def sort():
         pdb.gimp_layer_resize_to_image_size(layer)
 
 
+def number():
+    image = gimp.image_list()[0]
+    highest = 0
+    unnumbered = 0
+    for layer in image.layers:
+        try:
+            n = int(layer.name)
+            if n > highest:
+                highest = n
+        except ValueError:
+            unnumbered += 1
+    v = highest + unnumbered
+    for layer in image.layers:
+        try:
+            int(layer.name)
+        except ValueError:
+            layer.name = str(v)
+            v -= 1
+
+
+def renumber():
+    image = gimp.image_list()[0]
+    for (layer_index, layer) in enumerate(image.layers):
+        layer.name = str(len(image.layers) - layer_index)
+
+
 def frame(name=None):
     if isinstance(name, int):
         name = str(name)
@@ -67,6 +97,50 @@ def frame(name=None):
                 first = False
             else:
                 layer.visible = False
+
+f = frame
+
+
+def up():
+    image = gimp.image_list()[0]
+    if not image.layers:
+        return
+    selected = False
+    select_layer = image.layers[0]
+    for layer in image.layers[1:]:
+        if layer.visible:
+            if not selected and select_layer:
+                select_layer.visible = True
+                pdb.gimp_image_set_active_layer(image, select_layer)
+                selected = True
+            layer.visible = False
+        else:
+            layer.visible = False
+            if not selected:
+                select_layer = layer
+    if not selected:
+        select_layer.visible = True
+        pdb.gimp_image_set_active_layer(image, select_layer)
+
+
+def down():
+    image = gimp.image_list()[0]
+    if not image.layers:
+        return
+    select_next = False
+    selected = False
+    for layer in image.layers:
+        if select_next and not selected:
+            layer.visible = True
+            pdb.gimp_image_set_active_layer(image, layer)
+            selected = True
+        elif layer.visible:
+            select_next = True
+            layer.visible = False
+    if not selected:
+        layer = image.layers[0]
+        layer.visible = True
+        pdb.gimp_image_set_active_layer(image, layer)
 
 
 def showall():
