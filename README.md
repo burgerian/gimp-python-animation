@@ -36,13 +36,12 @@ Of course, you can adapt this process and modify your copy of the Python code to
 
 1. Draw animation frames on paper.  Write a frame number on each frame so you can keep track of them.
 2. Scan each piece of paper into GIMP using "File > Create > From Scanner/Camera..."  (as a colour picture).  Try to have the orientation the same for each piece of paper; it doesn't have to be correct, just the same for each image at this point.
-3. Open the python-fu console "Filters > Python-fu > Console".
-4. Run `stack()` in the Python-fu console.  All the images get combined into one image as layers.
-5. Use "Image > Transform" to rotate the image to the correct orientation.
-6. Use "Image > Scale" to scale the image to the pixel dimensions you want.  It's best if the image fits on your screen at 100% zoom.
-7. Save the image (in GIMP's `.xcf` format).
-8. File > Close All and discard changes.  This is necessary because the Python-fu can't close your other now-empty images for you.
-9. Reopen the GIMP file you saved.
+3. Run `stack()` in the Python-fu console.  All the images get combined into one image as layers.
+4. Use "Image > Transform" to rotate the image to the correct orientation.
+5. Use "Image > Scale" to scale the image to the pixel dimensions you want.  It's best if the image fits on your screen at 100% zoom.
+6. Save the image (in GIMP's `.xcf` format).
+7. File > Close All and discard changes.  This is necessary because the Python-fu can't close your other now-empty images for you.
+8. Reopen the GIMP file you saved.
 
 ### Colour and outline
 
@@ -50,7 +49,7 @@ The scanned images often have poor contrast.  You can run the script `bc()` to a
 
 If you have only drawn outlines, this is the time to colour in using GIMP's Flood Fill tool.
 
-It's very easy to get confused between the top visible layer and the currently active (selected) layer.  You can run the Python `frame()` function to select the top visible layer and hide the rest.
+It's very easy to get confused between the top visible layer and the currently active (selected) layer.  You can run the Python `f()` function to select the top visible layer and hide the rest, and `up()` and `down()` to move up and down the layer stack.
 
 ### Split and align layers if required
 
@@ -59,9 +58,9 @@ If you have multiple frames drawn on each sheet of paper, it's now time to split
 1. Right-click on each layer in the Layers dialog and select "Duplicate Layer" until you have as many copies of the layer as there are frames in the layer.
 2. Rename each layer with the frame number that the layer will represent.  E.g. if you have three copies of a layer that contains frames 1, 2 and 3, then you will end up with three copies of that layer called "1", "2" and "3".  To rename a layer, click it in the Layer dialog and press F2.
 3. Create guide lines (by dragging down and across from the ruler) that you can use to align your frames.  Turn off "Snap to Guides" from the View menu.
-4. Go through each layer and use the Move tool to shift the whole layer to line up the frames.  To select a single layer, run the Python function `frame(1)` to activate layer 1, `frame(2)` to activate layer 2, etc. - this also hides all the other layers, to avoid confusion.
+4. Go through each layer and use the Move tool to shift the whole layer to line up the frames.  To select a single layer, run the Python function `f(1)` to activate layer 1, `f(2)` to activate layer 2, etc. - this also hides all the other layers, to avoid confusion.  You can also use `up()` and `down()` to move to the next layer.
 5. Select a rectangle that contains all frame contents, and the Image > Crop to Selection.
-6. Go through each layer (using the `frame` function) and delete any mess around the edges, e.g. parts of other frames, using the usual GIMP drawing / selection tools.
+6. Go through each layer (using the `down()` function) and delete any mess around the edges, e.g. parts of other frames, using the usual GIMP drawing / selection tools.
 
 ### Sort frames
 
@@ -118,3 +117,8 @@ GIMP doesn't offer to reverse your animation when it's finished playing.  You ca
 
 Note, the copied frame has no relationship to the original frame, so make sure any other editing is completed before doing this!  The copy gets a new incremental frame number that does not show its relationship to the original frame number.
 
+### Numbering
+
+The `number()` function will assign an incremental numeric layer name to any layer that has a non-numeric name, while leaving layers that already have numeric names alone.  If there are multiple layers, they are numbered increasing from bottom to top.
+
+The `renumber()` function will rename all layers, starting from "1" at the bottom, then "2" etc.  Existing layer names are ignored.
