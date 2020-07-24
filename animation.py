@@ -106,8 +106,8 @@ def up():
     if not image.layers:
         return
     selected = False
-    select_layer = image.layers[0]
-    for layer in image.layers[1:]:
+    select_layer = None
+    for layer in image.layers:
         if layer.visible:
             if not selected and select_layer:
                 select_layer.visible = True

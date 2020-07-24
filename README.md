@@ -92,7 +92,7 @@ If you prefer more control or the Python script doesn't work, you can convert to
 7. Click Export, and wait.
 8. When done, open the `.gif` file in a web browser to see the result.
 
-GIMP can't save movie files, so you'll need other software if you want your animation as `.avi`, `.mp4` etc.
+GIMP can't save movie files, so you'll need other software if you want to convert your animated GIF to `.avi`, `.mp4` etc.
 
 ### Save animation as separate frames
 
