@@ -1,4 +1,12 @@
 #!/usr/bin/env python
+"""
+Animation helper plugin for GIMP.
+
+Written by Anthony Hayward.
+
+Project homepage: https://github.com/burgerian/gimp-python-animation
+"""
+
 import gimpfu
 from gimpfu import (
     gimp, pdb
