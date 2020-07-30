@@ -255,6 +255,63 @@ def gif(image=None, suffix=None, fps=24):
             pdb.gimp_image_delete(image)
 
 
+def sheet(image=None, cols=0):
+    if not image:
+        image = gimp.image_list()[0]
+    if not cols:
+        best = (1, 10000000)
+        for cols in range(1, len(image.layers) + 1):
+            rows = (len(image.layers) + (cols - 1)) // cols
+            (sheet_width, sheet_height) = (cols * image.width, rows * image.height)
+            sheet_aspect_ratio = sheet_width / sheet_height if sheet_width > sheet_height else sheet_height / sheet_width
+            if sheet_aspect_ratio < best[1]:
+                best = (cols, sheet_aspect_ratio)
+        cols = best[0]
+    file_path = "{}_sheet_{}_frames_{}_columns_{}x{}.png".format(
+        pdb.gimp_image_get_filename(image)[:-4], len(image.layers), cols, image.width, image.height)
+    gimp.progress_init("Save sheet as {}".format(file_path))
+    rows = (len(image.layers) + (cols - 1)) // cols
+    sheet = pdb.gimp_image_new(image.width * cols, image.height * rows, 0)
+    try:
+        sheet_layer = pdb.gimp_layer_new(
+            sheet, sheet.width, sheet.height,
+            1, # type = RGBA-IMAGE
+            "sprite sheet",
+            100, # opacity = 100 %
+            0 # mode = LAYER-MODE-NORMAL-LEGACY
+        )
+        pdb.gimp_image_insert_layer(sheet, sheet_layer, None, 0)
+
+        (row, col) = (0, 0)
+        for (layer_index, layer) in enumerate(image.layers):
+            pdb.gimp_selection_none(image)
+            pdb.gimp_layer_resize_to_image_size(layer)
+            pdb.gimp_edit_copy(layer)
+            floating = pdb.gimp_edit_paste(sheet_layer, True)
+            (left, top) = floating.offsets
+            pdb.gimp_layer_translate(floating, col * image.width - left, row * image.height - top)
+            pdb.gimp_floating_sel_anchor(floating)
+            col += 1
+            if col >= cols:
+                col = 0
+                row += 1
+            gimp.progress_update(100 * (layer_index + 1) / len(image.layers))
+        pdb.file_png_save(
+            sheet, sheet_layer,
+            file_path, None,
+            True, # interlace
+            9, # compression
+            True, # bkgd
+            True, # gama
+            True, # offs
+            True, # phys
+            True, # time
+        )
+        gimp.message("All frames saved as {}".format(file_path))
+    finally:
+        pdb.gimp_image_delete(sheet)
+
+
 gimpfu.register(
     "python_animation_helper_stack",
     "Stack all layers from all other images onto the current image",
@@ -492,6 +549,25 @@ gimpfu.register(
     ],
     [],
     png,
+    menu="<Image>/Filters/Animation",
+)
+
+gimpfu.register(
+    "python_animation_helper_sheet",
+    "Save frames as sprite sheet",
+    "Plugin to save frames as a sprite sheet PNG image",
+    "Anthony Hayward",
+    "Anthony Hayward 2020.  LGPL License",
+    "2020",
+    "Export as sprite sheet",
+    "*",
+	# input parameters. Same count and order as for plugin_func parameters 
+    [
+		(gimpfu.PF_IMAGE, "image", "Image", None), # type, name, description, default
+        (gimpfu.PF_INT, "cols", "Number of columns (0 for square sheet)", 0)
+    ],
+    [],
+    sheet,
     menu="<Image>/Filters/Animation",
 )
 

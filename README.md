@@ -90,7 +90,7 @@ If you have multiple frames drawn on each sheet of paper, it's now time to split
 
 ### Export animation as animated GIF
 
-You can run the command "Filters > Animation > Export as animated GIF" to save the animation as an animated GIF file.  Enter the desired frame rate and optionally a suffix for the filename.
+You can run the command "Filters > Animation > Export as animated GIF" to save the animation as an animated GIF file.  Enter the desired frame rate and optionally a suffix for the filename.  The filename is the same as the `.xcf` filename of the animation, with the optional suffix and the extension `.gif`.
 
 If you prefer to specify frame delay rather than frame rate, you can export an animated GIF using the File menu instead:
 
@@ -111,9 +111,15 @@ GIMP can't save movie files, so you'll need other software if you want to conver
 
 Each frame is saved to a PNG file with its frame number as a suffix, e.g. `my_anim_01.png`, `my_anim_02.png`, `my_anim_03.png` etc.
 
-### Save animation as sprite map
+### Save animation as sprite sheet
 
-TODO
+"Filters > Animation > Export as sprite sheet"
+
+The frames are arranged in a rectangular grid.  Each grid cell is the size of the original image.  The frames run left-to-right then top-to-bottom.  The number of columns can be specified, or left as 0 in which case it is calculated so as to make the sprite sheet as square as possible.
+
+![Example of a sprite sheet](sprite_sheet.png)
+
+The filename is the same as the `.xcf` filename of the animation, with a suffix indicating the number of frames and columns and the size of each grid cell, and the extension `.png`.
 
 ### Remove box around frame (transparent edge)
 
