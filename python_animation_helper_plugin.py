@@ -35,13 +35,14 @@ def bc(image=None, brightness=0, contrast=50):
 
 def nobox(image=None):
     if not image:
-        image = gimp.image_list()[0] 
+        image = gimp.image_list()[0]
+    pdb.gimp_context_set_sample_transparent(True)
     for layer in image.layers:
         layer.add_alpha()
         (w, h) = (image.width - 1, image.height - 1)
         for (x, y) in [(0, 0), (w, 0), (0, h), (w, h)]:
             pdb.gimp_image_select_contiguous_color(image, 2, layer, x, y)
-        pdb.gimp_edit_clear(layer)
+            pdb.gimp_edit_clear(layer)
 
 
 def sort(image=None):
