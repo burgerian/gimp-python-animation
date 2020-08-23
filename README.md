@@ -62,7 +62,7 @@ It's very easy to get confused between the top visible layer and the currently a
 - Solo layer up
 - Solo layer down
 - Solo layer: top visible
-These commands hide all but one layer, and ensure the displayed layer is selected.
+These commands hide all but one layer, and ensure the displayed layer is selected.  If you are stepping through multiple layers, you can use "Filters > Repeat Last" (Ctrl + F) to repeat the Solo layer up/down operation to step through the layers (unless you've applied a different filter following the last Solo layer up/down operation).
 
 ### Split and align layers if required
 
@@ -123,7 +123,7 @@ The filename is the same as the `.xcf` filename of the animation, with a suffix 
 
 ### Remove box around frame (transparent edge)
 
-Your scans will be full white rectangles with no transparency.  To add an Alpha Channel to your frames and delete the white edge around the outside, run "Filters > Animation > Remove white box".
+Your scans will be full white rectangles with no transparency.  To add an Alpha Channel to your frames and remove the surrounding blank white paper you've scanned, run "Filters > Animation > Cut out".  If this doesn't work well for you, you can add an alpha channel to each layer using "Filters > Animation > Add alpha channel to all layers" and then remove the surround on each layer manually.
 
 After removing the outer boxing, run the command "Filters > Animation > Show all layers" to see all the frames overlaid on each other, then you can easily crop the image to a box that includes all the content in all the frames.
 

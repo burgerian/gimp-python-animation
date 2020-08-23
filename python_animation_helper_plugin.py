@@ -37,19 +37,38 @@ def nobox(image=None):
     if not image:
         image = gimp.image_list()[0]
     pdb.gimp_context_set_sample_transparent(True)
+    image_size = (image.width, image.height)
     for layer in image.layers:
-        layer.add_alpha()
-        (w, h) = (image.width - 1, image.height - 1)
-        for (x, y) in [(0, 0), (w, 0), (0, h), (w, h)]:
-            pdb.gimp_image_select_contiguous_color(image, 2, layer, x, y)
-            pdb.gimp_edit_clear(layer)
+        if not pdb.gimp_drawable_has_alpha(layer):
+            layer.add_alpha()
+        if layer.offsets != (0, 0) or (layer.width, layer.height) != image_size:
+            pdb.gimp_layer_resize_to_image_size(layer)
+        (xmax, ymax) = (image.width - 1, image.height - 1)
+        for (x, y) in [(0, 0), (xmax, 0), (0, ymax), (xmax, ymax)]:
+            _num_channels, pixel = pdb.gimp_drawable_get_pixel(layer, x, y)
+            if all(p > 240 for p in pixel):
+                pdb.gimp_image_select_contiguous_color(image, 2, layer, x, y)
+                pdb.gimp_edit_clear(layer)
+
+
+def add_alpha(image=None):
+    if not image:
+        image = gimp.image_list()[0]
+    image_size = (image.width, image.height)
+    for layer in image.layers:
+        if not pdb.gimp_drawable_has_alpha(layer):
+            layer.add_alpha()
+        if layer.offsets != (0, 0) or (layer.width, layer.height) != image_size:
+            pdb.gimp_layer_resize_to_image_size(layer)
 
 
 def sort(image=None):
     if not image:
         image = gimp.image_list()[0]
+    image_size = (image.width, image.height)
     for layer in image.layers:
-        pdb.gimp_layer_resize_to_image_size(layer)
+        if layer.offsets != (0, 0) or (layer.width, layer.height) != image_size:
+            pdb.gimp_layer_resize_to_image_size(layer)
     more = True
     while more:
         more = False
@@ -353,12 +372,12 @@ gimpfu.register(
 
 gimpfu.register(
     "python_animation_helper_nobox",
-    "Add alpha channel to all layers and remove bounding white box",
+    "Add alpha channel to all layers and remove bounding white box (e.g. the piece of paper it was drawn on)",
     "Plugin to add alpha channel to all layers and remove bounding white box in the current image.",
     "Anthony Hayward",
     "Anthony Hayward 2020.  LGPL License",
     "2020",
-    "Remove white box",
+    "Cut out",
     "*",
 	# input parameters. Same count and order as for plugin_func parameters 
     [
@@ -368,6 +387,26 @@ gimpfu.register(
     nobox,
     menu="<Image>/Filters/Animation",
 )
+
+
+gimpfu.register(
+    "python_animation_helper_add_alpha",
+    "Add alpha channel to all layers, and resize to image size.",
+    "Plugin to add alpha channel to all layers.",
+    "Anthony Hayward",
+    "Anthony Hayward 2020.  LGPL License",
+    "2020",
+    "Add alpha channel to all layers",
+    "*",
+	# input parameters. Same count and order as for plugin_func parameters 
+    [
+		(gimpfu.PF_IMAGE, "image", "Image to modify", None), # type, name, description, default
+    ],
+    [],
+    add_alpha,
+    menu="<Image>/Filters/Animation",
+)
+
 
 gimpfu.register(
     "python_animation_helper_sort",
@@ -498,12 +537,12 @@ gimpfu.register(
 
 gimpfu.register(
     "python_animation_helper_mirror",
-    "Repeat frames in reverse order (mirror)",
+    "Mirror frame sequence (repeat frames in reverse order)",
     "Plugin to repeat frames in reverse order (mirror)",
     "Anthony Hayward",
     "Anthony Hayward 2020.  LGPL License",
     "2020",
-    "Repeat frames backwards",
+    "Mirror frame sequence (repeat in reverse order)",
     "*",
 	# input parameters. Same count and order as for plugin_func parameters 
     [
