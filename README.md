@@ -17,12 +17,17 @@ GIMP = GNU Image Manipulation Program, an open source graphics editor, available
 ## Installation
 
 1. Find the plugin directory for your user by clicking Edit > Preferences > Folders > Plug-ins and click the icon to "Show file location in the file manager"
-2. Copy [python_animation_helper_plugin.py](python_animation_helper_plugin.py) into the directory.
+2. Download [python_animation_helper_plugin.py](python_animation_helper_plugin.py) into the directory (click the link to view the file in GitHub, then right-click the "Raw" link and Save File As...)
 3. Restart GIMP.
 
 If GIMP is happy, you'll see new entries in the Filters > Animation menu:
 
 ![GIMP menu with extra animation commands](animation_menu.png)
+
+If GIMP is not happy and there are only the few standard entries in the Filters > Animation menu, you can try to debug the plugin loading.  Figure out the file path of your GIMP executable file, and run GIMP from the command line with verbose console logging enabled, e.g. for GIMP 2.10:
+```
+gimp-2.10 --verbose --console-messages
+```
 
 ## GIMP Dialogs
 
