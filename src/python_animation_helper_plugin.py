@@ -12,6 +12,8 @@ from gimpfu import (
     gimp, pdb
 )
 
+YEAR = "2021"
+COPYRIGHT = "Anthony Hayward " + YEAR + ".  LGPL License"
 
 def stack(target=None):
     for image in gimp.image_list():
@@ -28,7 +30,7 @@ def stack(target=None):
 
 def bc(image=None, brightness=0, contrast=50):
     if not image:
-        image = gimp.image_list()[0] 
+        image = gimp.image_list()[0]
     for layer in image.layers:
         pdb.gimp_drawable_brightness_contrast(layer, brightness / 100.0, contrast / 100.0)
 
@@ -82,6 +84,15 @@ def sort(image=None):
                 pdb.gimp_image_lower_item(image, a)
                 more = True
                 break
+
+
+def all_layers_to_image_size(image=None):
+    if not image:
+        image = gimp.image_list()[0]
+    image_size = (image.width, image.height)
+    for layer in image.layers:
+        if layer.offsets != (0, 0) or (layer.width, layer.height) != image_size:
+            pdb.gimp_layer_resize_to_image_size(layer)
 
 
 def number(image=None):
@@ -213,7 +224,10 @@ def png(image=None):
         image = gimp.image_list()[0]
     prefix = pdb.gimp_image_get_filename(image)[:-4] + "_"
     gimp.progress_init("Save frames as {}_*.png".format(prefix))
+    image_size = (image.width, image.height)
     for (layer_index, layer) in enumerate(image.layers):
+        if layer.offsets != (0, 0) or (layer.width, layer.height) != image_size:
+            pdb.gimp_layer_resize_to_image_size(layer)
         try:
             filename = "{}{:02d}.png".format(prefix, int(layer.name))
         except ValueError:
@@ -336,11 +350,11 @@ gimpfu.register(
     "Stack all layers from all other images onto the current image",
     "Plugin to stack all layers from all other images onto the current image.",
     "Anthony Hayward",
-    "Anthony Hayward 2020.  LGPL License",
-    "2020",
+    COPYRIGHT,
+    YEAR,
     "Stack all images onto this one",
     "*",
-	# input parameters. Same count and order as for plugin_func parameters 
+	# input parameters. Same count and order as for plugin_func parameters
     [
 		(gimpfu.PF_IMAGE, "target", "Image to modify", None), # type, name, description, default
     ],
@@ -351,14 +365,14 @@ gimpfu.register(
 
 gimpfu.register(
     "python_animation_helper_bc",
-    r"Adjust brightness and contrast on all layers.",
+    "Adjust brightness and contrast on all layers.",
     "Plugin to increase contrast on all layers of the current image.",
     "Anthony Hayward",
-    "Anthony Hayward 2020.  LGPL License",
-    "2020",
-    r"Brightness/contrast on all layers",
+    COPYRIGHT,
+    YEAR,
+    "Brightness/contrast on all layers",
     "*",
-	# input parameters. Same count and order as for plugin_func parameters 
+	# input parameters. Same count and order as for plugin_func parameters
     [
 		(gimpfu.PF_IMAGE, "image", "Image to modify", None), # type, name, description, default
 		(gimpfu.PF_SLIDER, "brightness", "Brightness", 0, (-50, 50, 1)),
@@ -375,11 +389,11 @@ gimpfu.register(
     "Add alpha channel to all layers and remove bounding white box (e.g. the piece of paper it was drawn on)",
     "Plugin to add alpha channel to all layers and remove bounding white box in the current image.",
     "Anthony Hayward",
-    "Anthony Hayward 2020.  LGPL License",
-    "2020",
+    COPYRIGHT,
+    YEAR,
     "Cut out",
     "*",
-	# input parameters. Same count and order as for plugin_func parameters 
+	# input parameters. Same count and order as for plugin_func parameters
     [
 		(gimpfu.PF_IMAGE, "image", "Image to modify", None), # type, name, description, default
     ],
@@ -394,11 +408,11 @@ gimpfu.register(
     "Add alpha channel to all layers, and resize to image size.",
     "Plugin to add alpha channel to all layers.",
     "Anthony Hayward",
-    "Anthony Hayward 2020.  LGPL License",
-    "2020",
+    COPYRIGHT,
+    YEAR,
     "Add alpha channel to all layers",
     "*",
-	# input parameters. Same count and order as for plugin_func parameters 
+	# input parameters. Same count and order as for plugin_func parameters
     [
 		(gimpfu.PF_IMAGE, "image", "Image to modify", None), # type, name, description, default
     ],
@@ -413,11 +427,11 @@ gimpfu.register(
     "Set all layers to image size and sort by name",
     "Plugin to set all layers to image size and sort by name.",
     "Anthony Hayward",
-    "Anthony Hayward 2020.  LGPL License",
-    "2020",
+    COPYRIGHT,
+    YEAR,
     "Sort layers",
     "*",
-	# input parameters. Same count and order as for plugin_func parameters 
+	# input parameters. Same count and order as for plugin_func parameters
     [
 		(gimpfu.PF_IMAGE, "image", "Image to modify", None), # type, name, description, default
     ],
@@ -432,11 +446,11 @@ gimpfu.register(
     "Number unnumbered frames, bottom to top",
     "Plugin to number unnumbered frames, bottom to top.",
     "Anthony Hayward",
-    "Anthony Hayward 2020.  LGPL License",
-    "2020",
+    COPYRIGHT,
+    YEAR,
     "Number unnumbered layers",
     "*",
-	# input parameters. Same count and order as for plugin_func parameters 
+	# input parameters. Same count and order as for plugin_func parameters
     [
 		(gimpfu.PF_IMAGE, "image", "Image to modify", None), # type, name, description, default
     ],
@@ -450,11 +464,11 @@ gimpfu.register(
     "Number all frames, bottom to top",
     "Plugin to number all frames, bottom to top.",
     "Anthony Hayward",
-    "Anthony Hayward 2020.  LGPL License",
-    "2020",
+    COPYRIGHT,
+    YEAR,
     "Renumber all layers",
     "*",
-	# input parameters. Same count and order as for plugin_func parameters 
+	# input parameters. Same count and order as for plugin_func parameters
     [
 		(gimpfu.PF_IMAGE, "image", "Image to modify", None), # type, name, description, default
     ],
@@ -468,11 +482,11 @@ gimpfu.register(
     "Focus on top visible frame",
     "Plugin to focus on top visible frame.",
     "Anthony Hayward",
-    "Anthony Hayward 2020.  LGPL License",
-    "2020",
+    COPYRIGHT,
+    YEAR,
     "Solo layer: top visible",
     "*",
-	# input parameters. Same count and order as for plugin_func parameters 
+	# input parameters. Same count and order as for plugin_func parameters
     [
 		(gimpfu.PF_IMAGE, "image", "Image", None), # type, name, description, default
     ],
@@ -486,11 +500,11 @@ gimpfu.register(
     "Focus on previous frame",
     "Plugin to focus on previous frame.",
     "Anthony Hayward",
-    "Anthony Hayward 2020.  LGPL License",
-    "2020",
+    COPYRIGHT,
+    YEAR,
     r"Solo layer /\ /\ /\ up",
     "*",
-	# input parameters. Same count and order as for plugin_func parameters 
+	# input parameters. Same count and order as for plugin_func parameters
     [
 		(gimpfu.PF_IMAGE, "image", "Image", None), # type, name, description, default
     ],
@@ -504,11 +518,11 @@ gimpfu.register(
     "Focus on previous frame",
     "Plugin to focus on previous frame.",
     "Anthony Hayward",
-    "Anthony Hayward 2020.  LGPL License",
-    "2020",
+    COPYRIGHT,
+    YEAR,
     r"Solo layer \/ \/ \/ down",
     "*",
-	# input parameters. Same count and order as for plugin_func parameters 
+	# input parameters. Same count and order as for plugin_func parameters
     [
 		(gimpfu.PF_IMAGE, "image", "Image", None), # type, name, description, default
     ],
@@ -522,11 +536,11 @@ gimpfu.register(
     "Show all layers (piled up)",
     "Plugin to show all layers",
     "Anthony Hayward",
-    "Anthony Hayward 2020.  LGPL License",
-    "2020",
+    COPYRIGHT,
+    YEAR,
     "Show all layers",
     "*",
-	# input parameters. Same count and order as for plugin_func parameters 
+	# input parameters. Same count and order as for plugin_func parameters
     [
 		(gimpfu.PF_IMAGE, "image", "Image", None), # type, name, description, default
     ],
@@ -540,11 +554,11 @@ gimpfu.register(
     "Mirror frame sequence (repeat frames in reverse order)",
     "Plugin to repeat frames in reverse order (mirror)",
     "Anthony Hayward",
-    "Anthony Hayward 2020.  LGPL License",
-    "2020",
+    COPYRIGHT,
+    YEAR,
     "Mirror frame sequence (repeat in reverse order)",
     "*",
-	# input parameters. Same count and order as for plugin_func parameters 
+	# input parameters. Same count and order as for plugin_func parameters
     [
 		(gimpfu.PF_IMAGE, "image", "Image", None), # type, name, description, default
     ],
@@ -558,11 +572,11 @@ gimpfu.register(
     "Save as animated GIF",
     "Plugin to save as animated GIF",
     "Anthony Hayward",
-    "Anthony Hayward 2020.  LGPL License",
-    "2020",
+    COPYRIGHT,
+    YEAR,
     "Export as animated GIF",
     "*",
-	# input parameters. Same count and order as for plugin_func parameters 
+	# input parameters. Same count and order as for plugin_func parameters
     [
 		(gimpfu.PF_IMAGE, "image", "Image", None), # type, name, description, default
         (gimpfu.PF_STRING, "suffix", "Suffix (to append to .xcf filename)", ""),
@@ -578,11 +592,11 @@ gimpfu.register(
     "Save frames as PNG images",
     "Plugin to save frames as PNG images",
     "Anthony Hayward",
-    "Anthony Hayward 2020.  LGPL License",
-    "2020",
+    COPYRIGHT,
+    YEAR,
     "Export each frame as PNG",
     "*",
-	# input parameters. Same count and order as for plugin_func parameters 
+	# input parameters. Same count and order as for plugin_func parameters
     [
 		(gimpfu.PF_IMAGE, "image", "Image", None), # type, name, description, default
     ],
@@ -596,11 +610,11 @@ gimpfu.register(
     "Save frames as sprite sheet",
     "Plugin to save frames as a sprite sheet PNG image",
     "Anthony Hayward",
-    "Anthony Hayward 2020.  LGPL License",
-    "2020",
+    COPYRIGHT,
+    YEAR,
     "Export as sprite sheet",
     "*",
-	# input parameters. Same count and order as for plugin_func parameters 
+	# input parameters. Same count and order as for plugin_func parameters
     [
 		(gimpfu.PF_IMAGE, "image", "Image", None), # type, name, description, default
         (gimpfu.PF_INT, "cols", "Number of columns (0 for square sheet)", 0)
@@ -609,5 +623,24 @@ gimpfu.register(
     sheet,
     menu="<Image>/Filters/Animation",
 )
+
+gimpfu.register(
+    "python_animation_helper_all_layers_to_image_size",
+    "All layers to image size",
+    "Plugin to resize all layers to image size.",
+    "Anthony Hayward",
+    COPYRIGHT,
+    YEAR,
+    "All layers to image size",
+    "*",
+	# input parameters. Same count and order as for plugin_func parameters
+    [
+		(gimpfu.PF_IMAGE, "target", "Image to modify", None), # type, name, description, default
+    ],
+    [],
+    all_layers_to_image_size,
+    menu="<Image>/Filters/Animation",
+)
+
 
 gimpfu.main()
