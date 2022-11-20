@@ -119,6 +119,8 @@ def number(image=None):
 def renumber(image=None):
     if not image:
         image = gimp.image_list()[0]
+    for layer in image.layers:
+        layer.name = "was " + layer.name  # avoid duplicate names if a layer is already called "1"
     for (layer_index, layer) in enumerate(image.layers):
         layer.name = str(len(image.layers) - layer_index)
 
@@ -222,7 +224,11 @@ def mirror(image=None):
 def png(image=None):
     if not image:
         image = gimp.image_list()[0]
-    prefix = pdb.gimp_image_get_filename(image)[:-4] + "_"
+    image_filename = pdb.gimp_image_get_filename(image)
+    if not image_filename:
+        gimp.message("Save image as xcf first!")
+        return
+    prefix = image_filename[:-4] + "_"
     gimp.progress_init("Save frames as {}_*.png".format(prefix))
     image_size = (image.width, image.height)
     for (layer_index, layer) in enumerate(image.layers):
@@ -250,7 +256,11 @@ def png(image=None):
 def gif(image=None, suffix=None, fps=24):
     if not image:
         image = gimp.image_list()[0]
-    file_path = pdb.gimp_image_get_filename(image)[:-4]
+    image_filename = pdb.gimp_image_get_filename(image)
+    if not image_filename:
+        gimp.message("Save image as xcf first!")
+        return
+    file_path = image_filename[:-4]
     if suffix:
         file_path += "_" + suffix.strip()
     file_path += ".gif"
@@ -300,8 +310,12 @@ def sheet(image=None, cols=0):
             if sheet_aspect_ratio < best[1]:
                 best = (cols, sheet_aspect_ratio)
         cols = best[0]
+    image_filename = pdb.gimp_image_get_filename(image)
+    if not image_filename:
+        gimp.message("Save image as xcf first!")
+        return
     file_path = "{}_sheet_{}_frames_{}_columns_{}x{}.png".format(
-        pdb.gimp_image_get_filename(image)[:-4], len(image.layers), cols, image.width, image.height)
+        image_filename[:-4], len(image.layers), cols, image.width, image.height)
     gimp.progress_init("Save sheet as {}".format(file_path))
     rows = (len(image.layers) + (cols - 1)) // cols
     sheet = pdb.gimp_image_new(image.width * cols, image.height * rows, 0)
@@ -343,6 +357,17 @@ def sheet(image=None, cols=0):
         gimp.message("All frames saved as {}".format(file_path))
     finally:
         pdb.gimp_image_delete(sheet)
+
+
+def reverse(image=None):
+    if not image:
+        image = gimp.image_list()[0]
+    layer_count = len(image.layers)
+    for i in range(0, layer_count - 1):
+        l = image.layers[0]
+        for j in range(i, layer_count - 1):
+            pdb.gimp_image_lower_item(image, l)
+    renumber(image)
 
 
 gimpfu.register(
@@ -639,6 +664,24 @@ gimpfu.register(
     ],
     [],
     all_layers_to_image_size,
+    menu="<Image>/Filters/Animation",
+)
+
+gimpfu.register(
+    "python_animation_helper_reverse",
+    "Reverse",
+    "Plugin to reverse the frame order.",
+    "Anthony Hayward",
+    COPYRIGHT,
+    YEAR,
+    "Reverse",
+    "*",
+	# input parameters. Same count and order as for plugin_func parameters
+    [
+		(gimpfu.PF_IMAGE, "target", "Image to modify", None), # type, name, description, default
+    ],
+    [],
+    reverse,
     menu="<Image>/Filters/Animation",
 )
 
